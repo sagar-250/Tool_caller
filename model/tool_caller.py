@@ -45,7 +45,7 @@ def run_conversation(user_prompt,tools):
             "role": "system",
             "content": f"""            
             You are an assistant that can use tools. You have access to the following tool: {tools}.
-            go through each argument provided properly and give every needed arg
+            go through each argument and description if  provided properly and give every needed arg
             
             when you need output from of i th previous tool for argument write "$$PREV[i]" in the argument .order the function calling properly for the task.
             
@@ -63,7 +63,7 @@ def run_conversation(user_prompt,tools):
         model="llama-3.1-70b-versatile",
         response_model=ResponseModel,
         messages=messages,
-        temperature=0.7,
+        temperature=0.9,
         max_tokens=1000,
     )
 
@@ -85,7 +85,7 @@ def output(query,tools):
   
 
 
-#EXAMPLE
+# # EXAMPLE
 # tools1=[
 #   {
 #       "tool_name": "who_am_i",
@@ -181,7 +181,12 @@ def output(query,tools):
 #     "arg_name": "type",
 #     "arg_type": "str",
 #     "is_array": True,
-#     "is_required": False
+#     "is_required": False,
+#     "arg_description":"""Filters for work of
+#         the provided
+#         types. Allowed
+#         values: issue,
+#         ticket, task"""
 #     }
 #     ],
 #     "output": {

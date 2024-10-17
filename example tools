@@ -1,0 +1,233 @@
+[
+    {
+      "tool_name": "weather_check",
+      "tool_description": "Returns the current weather for a specified location",
+      "args": [
+        {
+          "name": "location",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        }
+      ],
+      "output": {
+        "arg_type": "str",
+        "is_array": false,
+        "is_required": true
+      }
+    },
+    {
+      "tool_name": "currency_converter",
+      "tool_description": "Converts an amount from one currency to another",
+      "args": [
+        {
+          "name": "amount",
+          "arg_type": "float",
+          "is_array": false,
+          "is_required": true
+        },
+        {
+          "name": "from_currency",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        },
+        {
+          "name": "to_currency",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        }
+      ],
+      "output": {
+        "arg_type": "float",
+        "is_array": false,
+        "is_required": true
+      }
+    },
+    {
+      "tool_name": "translate_text",
+      "tool_description": "Translates text from one language to another",
+      "args": [
+        {
+          "name": "text",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        },
+        {
+          "name": "from_language",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        },
+        {
+          "name": "to_language",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        }
+      ],
+      "output": {
+        "arg_type": "str",
+        "is_array": false,
+        "is_required": true
+      }
+    },
+    {
+      "tool_name": "calculate_bmi",
+      "tool_description": "Calculates the Body Mass Index (BMI) based on height and weight",
+      "args": [
+        {
+          "name": "height",
+          "arg_type": "float",
+          "is_array": false,
+          "is_required": true
+        },
+        {
+          "name": "weight",
+          "arg_type": "float",
+          "is_array": false,
+          "is_required": true
+        }
+      ],
+      "output": {
+        "arg_type": "float",
+        "is_array": false,
+        "is_required": true
+      }
+    },
+    {
+      "tool_name": "find_nearby_restaurants",
+      "tool_description": "Finds restaurants near a specified location",
+      "args": [
+        {
+          "name": "location",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        },
+        {
+          "name": "cuisine",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": false
+        }
+      ],
+      "output": {
+        "arg_type": "array",
+        "is_array": true,
+        "is_required": true
+      }
+    },
+    {
+      "tool_name": "send_email",
+      "tool_description": "Sends an email to a specified recipient",
+      "args": [
+        {
+          "name": "recipient",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        },
+        {
+          "name": "subject",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        },
+        {
+          "name": "body",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        }
+      ],
+      "output": {
+        "arg_type": "str",
+        "is_array": false,
+        "is_required": true
+      }
+    },
+    {
+      "tool_name": "book_flight",
+      "tool_description": "Books a flight for a given destination and date",
+      "args": [
+        {
+          "name": "destination",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        },
+        {
+          "name": "departure_date",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        }
+      ],
+      "output": {
+        "arg_type": "str",
+        "is_array": false,
+        "is_required": true
+      }
+    },
+    {
+      "tool_name": "play_music",
+      "tool_description": "Plays a specified song or artist",
+      "args": [
+        {
+          "name": "song_name",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        },
+        {
+          "name": "artist",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": false
+        }
+      ],
+      "output": {
+        "arg_type": "str",
+        "is_array": false,
+        "is_required": true
+      }
+    },
+    {
+      "tool_name": "find_movie",
+      "tool_description": "Finds details about a specific movie",
+      "args": [
+        {
+          "name": "movie_title",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        }
+      ],
+      "output": {
+        "arg_type": "json",
+        "is_array": false,
+        "is_required": true
+      }
+    },
+    {
+      "tool_name": "get_stock_price",
+      "tool_description": "Retrieves the current stock price for a given company",
+      "args": [
+        {
+          "name": "company_symbol",
+          "arg_type": "str",
+          "is_array": false,
+          "is_required": true
+        }
+      ],
+      "output": {
+        "arg_type": "float",
+        "is_array": false,
+        "is_required": true
+      }
+    }
+  ]
+  

@@ -9,6 +9,7 @@ import uvicorn
 import json
 import PyPDF2
 from tool_caller import output
+from function_selector import tool_retriever
 
 root_dir = pathlib.Path(__file__).parent
 
@@ -36,6 +37,7 @@ class Query1(BaseModel):
 def get_response(req:Query1):
     user_prompt=req.query
     tools=json.loads(req.tools)
+    tools=tool_retriever(user_prompt,tools)
     tools.append({
     "tool_name": "NOT_POSSIBLE",
     "tool_description": "USED WHEN THE OTHER TOOLS ARE NOT SUFFICIENT OR CANT DO THE TASK",
@@ -48,7 +50,7 @@ def get_response(req:Query1):
     })
     tool_calls=output(user_prompt,tools)
     for tool in tool_calls:
-        tool=json.loads(tool)
+        tool=json.loads(tool)   
         if tool["tool_name"] == "NOT_POSSIBLE":
             return []
     return tool_calls
