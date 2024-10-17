@@ -43,8 +43,13 @@ def run_conversation(user_prompt,tools):
     messages = [
         {
             "role": "system",
-            "content": f"""            
-            You are an assistant that can use tools. You have access to the following tool: {tools}.
+            "content": f"""
+            **Instructions**:
+            - Analyze the given steps, which include tool names and arguments.
+            - Use these steps to generate the sequence of tool calls, ensuring correct ordering and dependency management.     
+            
+                   
+            You have access to the following tool: {tools}.
             go through each argument and description if  provided properly and give every needed arg
             
             when you need output from of i th previous tool for argument write "$$PREV[i]" in the argument .order the function calling properly for the task.
@@ -60,7 +65,7 @@ def run_conversation(user_prompt,tools):
 
     # Make the Groq API call
     response = client.chat.completions.create(
-        model="llama-3.1-70b-versatile",
+        model="llama-3.2-90b-vision-preview",
         response_model=ResponseModel,
         messages=messages,
         temperature=0.9,

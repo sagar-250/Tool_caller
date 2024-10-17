@@ -10,6 +10,7 @@ import json
 import PyPDF2
 from tool_caller import output
 from function_selector import tool_retriever
+from planner import CustomMultiQuery
 
 root_dir = pathlib.Path(__file__).parent
 
@@ -37,7 +38,8 @@ class Query1(BaseModel):
 def get_response(req:Query1):
     user_prompt=req.query
     tools=json.loads(req.tools)
-    tools=tool_retriever(user_prompt,tools)
+    if len(tools)>10:
+        tools=tool_retriever(user_prompt,tools)
     tools.append({
     "tool_name": "NOT_POSSIBLE",
     "tool_description": "USED WHEN THE OTHER TOOLS ARE NOT SUFFICIENT OR CANT DO THE TASK",
@@ -48,12 +50,21 @@ def get_response(req:Query1):
     "is_required": True
     }
     })
-    tool_calls=output(user_prompt,tools)
-    for tool in tool_calls:
-        tool=json.loads(tool)   
-        if tool["tool_name"] == "NOT_POSSIBLE":
-            return []
-    return tool_calls
+    
+    planner=CustomMultiQuery()
+    planner.model_post_init()
+    planner=planner.planner
+    steps=planner(user_prompt,tools)  
+
+    if steps==[]:
+        return []
+    else:
+        tool_calls=output(str(steps),tools)
+        for tool in tool_calls:
+            tool=json.loads(tool)   
+            if tool["tool_name"] == "NOT_POSSIBLE":
+                return []
+        return tool_calls
 
 
 
