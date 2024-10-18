@@ -8,9 +8,10 @@ import os
 import uvicorn 
 import json
 import PyPDF2
-from tool_caller import output
+from tool_caller import output,validator_crrection
 from function_selector import tool_retriever
 from planner import CustomMultiQuery
+from validator import error_check
 
 root_dir = pathlib.Path(__file__).parent
 
@@ -64,8 +65,13 @@ def get_response(req:Query1):
             tool=json.loads(tool)   
             if tool["tool_name"] == "NOT_POSSIBLE":
                 return []
+        validate_message=error_check(tools,tool_calls)
+        print(validate_message)
+        if validate_message !="All correct":
+            tool_calls=validator_crrection(tools,tool_calls,validate_message)
+           
+               
         return tool_calls
-
 
 
 uvicorn.run(app,host="127.0.0.1",port=8000)        

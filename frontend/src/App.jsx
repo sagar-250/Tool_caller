@@ -248,7 +248,7 @@ const App = () => {
     <Layout style={{ padding: '24px', backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
       <Content style={{ width: '100%', margin: '0 auto' }}>
         <Title level={2} style={{ textAlign: 'center', marginBottom: '24px' }}>
-          Tool Management Interface
+          GEAR UP
         </Title>
         <Space style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
           <Button

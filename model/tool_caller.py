@@ -63,6 +63,8 @@ def run_conversation(user_prompt,tools):
         }
     ]
 
+    
+    
     # Make the Groq API call
     response = client.chat.completions.create(
         model="llama-3.2-90b-vision-preview",
@@ -75,6 +77,28 @@ def run_conversation(user_prompt,tools):
     return response.tool_calls
 
 # Example usage
+def validator_crrection(tools,llm_output,validation_message):
+    validation_message=f"""**Instructions**:
+        - edit the llm_output:{llm_output} according to the validation message:{validation_message}
+        - Ensure that all required arguments are present and correctly formatted. 
+        - Check for any inconsistencies or missing information in the tool calls.
+        
+        You have access to the following tools: {tools}.
+        Go through each argument and description carefully to confirm they are provided correctly and all necessary arguments are included.
+        
+        ."""
+        
+    response = client.chat.completions.create(
+    model="llama-3.2-90b-vision-preview",
+    response_model=ResponseModel,
+    messages=validation_message,
+    temperature=0.9,
+    max_tokens=1000,
+    )
+
+    return response.tool_calls
+
+
 
 def output(query,tools):
     tool_calls = run_conversation(query,tools)
@@ -90,153 +114,153 @@ def output(query,tools):
   
 
 
-# # EXAMPLE
-# tools1=[
-#   {
-#       "tool_name": "who_am_i",
-#       "tool_description": "Returns the id of the current user",
-#       "args": [],
-#       "output": {
-#           "arg_type": "str",
-#           "is_array": False,
-#           "is_required": True
-#       }
-#   },
-#   {
-#       "tool_name": "get_sprint_id",
-#       "tool_description": "Returns the ID\nof the current\nsprint",
-#       "args": [],
-#       "output": {
-#           "arg_type": "str",
-#           "is_array": False,
-#           "is_required": True
-#       }
-#   },
-#   {
-#     "tool_name": "works_list",
-#     "tool_description": "Returns a list of work items matching the request",
-#     "args": [
-#     {
-#     "arg_name": "applies_to_part",
-#     "arg_type": "str",
-#     "is_array": True,
-#     "is_required": False
-#     },
-#     {
-#     "arg_name": "created_by",
-#     "arg_type": "str",
-#     "is_array": True,
-#     "is_required": False
-#     },
-#     {
-#     "arg_name": "issue_priority",
-#     "arg_type": "str",
-#     "is_array": True,
-#     "is_required": False
-#     },
-#     {
-#     "arg_name": "issue.rev_orgs",
-#     "arg_type": "str",
-#     "is_array": True,
-#     "is_required": False
-#     },
-#     {
-#     "arg_name": "limit",
-#     "arg_type": "int",
-#     "is_array": False,
-#     "is_required": False
-#     },
-#     {
-#     "arg_name": "owned_by",
-#     "arg_type": "str",
-#     "is_array": True,
-#     "is_required": False
-#     },
-#     {
-#     "arg_name": "stage_name",
-#     "arg_type": "str",
-#     "is_array": True,
-#     "is_required": False
-#     },
-#     {
-#     "arg_name": "ticket_need_response",
-#     "arg_type": "boolean",
-#     "is_array": False,
-#     "is_required": False
-#     },
-#     {
-#     "arg_name": "ticket_rev_org",
-#     "arg_type": "str",
-#     "is_array": True,
-#     "is_required": False
-#     },
-#     {
-#     "arg_name": "ticket_severity",
-#     "arg_type": "str",
-#     "is_array": True,
-#     "is_required": False
-#     },
-#     {
-#     "arg_name": "ticket_source_channel",
-#     "arg_type": "str",
-#     "is_array": True,
-#     "is_required": False
-#     },
-#     {
-#     "arg_name": "type",
-#     "arg_type": "str",
-#     "is_array": True,
-#     "is_required": False,
-#     "arg_description":"""Filters for work of
-#         the provided
-#         types. Allowed
-#         values: issue,
-#         ticket, task"""
-#     }
-#     ],
-#     "output": {
-#     "arg_type": "any",
-#     "is_array": False,
-#     "is_required": True
-#     }
-#     },
-#     {
-#     "tool_name": "summarize_objects",
-#     "tool_description": "Summarizes a list of objects. The logic of how to summarize a particular object type is an internal implementation detail.",
-#     "args": [
-#     {
-#     "arg_name": "objects",
-#     "arg_type": "any",
-#     "is_array": True,
-#     "is_required": True
-#     }
-#     ],
-#     "output": {
-#     "arg_type": "any",
-#     "is_array": False,
-#     "is_required": True
-#     }
-#     },
-#     {
-#     "tool_name": "prioritize_objects",
-#     "tool_description": "Returns a list of objects sorted by priority. The logic of what constitutes priority for a given object is an internal implementation detail",
-#     "args": [
-#     {
-#     "arg_name": "objects",
-#     "arg_type": "any",
-#     "is_array": False,
-#     "is_required": False
-#     }
-#     ],
-#     "output": {
-#     "arg_type": "any",
-#     "is_array": True,
-#     "is_required": True
-#     }
-# }]
+# EXAMPLE
+tools1=[
+  {
+      "tool_name": "who_am_i",
+      "tool_description": "Returns the id of the current user",
+      "args": [],
+      "output": {
+          "arg_type": "str",
+          "is_array": False,
+          "is_required": True
+      }
+  },
+  {
+      "tool_name": "get_sprint_id",
+      "tool_description": "Returns the ID\nof the current\nsprint",
+      "args": [],
+      "output": {
+          "arg_type": "str",
+          "is_array": False,
+          "is_required": True
+      }
+  },
+  {
+    "tool_name": "works_list",
+    "tool_description": "Returns a list of work items matching the request",
+    "args": [
+    {
+    "arg_name": "applies_to_part",
+    "arg_type": "str",
+    "is_array": True,
+    "is_required": False
+    },
+    {
+    "arg_name": "created_by",
+    "arg_type": "str",
+    "is_array": True,
+    "is_required": False
+    },
+    {
+    "arg_name": "issue_priority",
+    "arg_type": "str",
+    "is_array": True,
+    "is_required": False
+    },
+    {
+    "arg_name": "issue.rev_orgs",
+    "arg_type": "str",
+    "is_array": True,
+    "is_required": False
+    },
+    {
+    "arg_name": "limit",
+    "arg_type": "int",
+    "is_array": False,
+    "is_required": False
+    },
+    {
+    "arg_name": "owned_by",
+    "arg_type": "str",
+    "is_array": True,
+    "is_required": False
+    },
+    {
+    "arg_name": "stage_name",
+    "arg_type": "str",
+    "is_array": True,
+    "is_required": False
+    },
+    {
+    "arg_name": "ticket_need_response",
+    "arg_type": "boolean",
+    "is_array": False,
+    "is_required": False
+    },
+    {
+    "arg_name": "ticket_rev_org",
+    "arg_type": "str",
+    "is_array": True,
+    "is_required": False
+    },
+    {
+    "arg_name": "ticket_severity",
+    "arg_type": "str",
+    "is_array": True,
+    "is_required": False
+    },
+    {
+    "arg_name": "ticket_source_channel",
+    "arg_type": "str",
+    "is_array": True,
+    "is_required": False
+    },
+    {
+    "arg_name": "type",
+    "arg_type": "str",
+    "is_array": True,
+    "is_required": False,
+    "arg_description":"""Filters for work of
+        the provided
+        types. Allowed
+        values: issue,
+        ticket, task"""
+    }
+    ],
+    "output": {
+    "arg_type": "any",
+    "is_array": False,
+    "is_required": True
+    }
+    },
+    {
+    "tool_name": "summarize_objects",
+    "tool_description": "Summarizes a list of objects. The logic of how to summarize a particular object type is an internal implementation detail.",
+    "args": [
+    {
+    "arg_name": "objects",
+    "arg_type": "any",
+    "is_array": True,
+    "is_required": True
+    }
+    ],
+    "output": {
+    "arg_type": "any",
+    "is_array": False,
+    "is_required": True
+    }
+    },
+    {
+    "tool_name": "prioritize_objects",
+    "tool_description": "Returns a list of objects sorted by priority. The logic of what constitutes priority for a given object is an internal implementation detail",
+    "args": [
+    {
+    "arg_name": "objects",
+    "arg_type": "any",
+    "is_array": False,
+    "is_required": False
+    }
+    ],
+    "output": {
+    "arg_type": "any",
+    "is_array": True,
+    "is_required": True
+    }
+}]
 
-# user_prompt="Summarize tickets from ’support’ channel"   
-# L=output(user_prompt,tools1)    
-# print(L)
+user_prompt="Summarize tickets from ’support’ channel"   
+L=output(user_prompt,tools1)    
+print(L)
     
     

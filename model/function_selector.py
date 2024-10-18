@@ -2,13 +2,16 @@ import json
 from langchain.schema import Document
 from langchain_community.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
+from rank_bm25 import BM25Okapi
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from sklearn.feature_extraction.text import TfidfVectorizer
+from nltk.tokenize import word_tokenize
+from sklearn.metrics.pairwise import cosine_similarity
+import ast
 
 
 class EnhancedVectorStoreRetriever:
-    '''
-    VectorStoreRetriever customized to handle the new JSON format of tool descriptions,
-    including detailed argument descriptions from an external dictionary.
-    '''
+    
     def __init__(self, embeddings, name: str, tool_list: list[dict], arg_description_dict: dict=None):
         self.embeddings = embeddings
         self.tool_list = tool_list
@@ -36,6 +39,7 @@ class EnhancedVectorStoreRetriever:
 
             doc_content = json.dumps(tool_representation, indent=2)
             doc = Document(page_content=doc_content, metadata={"index": i})
+            print(doc)
             self.documents.append(doc)
 
         # Create or load a vector store
@@ -48,28 +52,63 @@ class EnhancedVectorStoreRetriever:
                 self.embeddings
             )
             self.vector_store.save_local("/content/drive/MyDrive/vector_store")
-
-        self.vs_name = name
-        
-
-
-
+    def get_docs(self):
+        return self.documents
     def get_retriever(self):
         return self.vector_store
 
 
 
 
+    
+def BM25_search(query, tokenized_corpus):
+
+    bm25 = BM25Okapi(tokenized_corpus)
+
+    tokenized_query = word_tokenize(query.lower())
+
+
+    doc_scores = bm25.get_scores(tokenized_query)
+
+ 
+    top_10_i = sorted(
+        range(len(doc_scores)), 
+        key=lambda i: doc_scores[i], 
+        reverse=True
+    )[:10]
+    top_10_docs = [tokenized_corpus[i] for i in top_10_i]
+
+    return top_10_docs
+
+
+    
+
+def union_by_toolname(list1, list2):
+
+    merged_dict = {item['tool_name']: item for item in list1}
+    merged_dict.update({item['tool_name']: item for item in list2})
+    merged_list = list(merged_dict.values())
+    return merged_list    
+
+
 def tool_retriever(query,tools):
     hf_embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     vs_retriever = EnhancedVectorStoreRetriever(hf_embeddings, "my_vector_store", tools)
-    retrieved_docs = vs_retriever.get_retriever().similarity_search(query,k=10)
-    retrieved_tools=[]
-    for i in retrieved_docs:
-        retrieved_tools.append(json.loads(i.page_content))
+    tokenized_corpus = [str(chunk) for chunk in tools]
+    retrieved_docs_cos = vs_retriever.get_retriever().similarity_search(query,k=10)
+    retrieved_tools_cos=[]
+    for i in retrieved_docs_cos:
+        retrieved_tools_cos.append(json.loads(i.page_content))
 
-    print(retrieved_tools)
-    return retrieved_tools
+    retrieved_docs_bm=BM25_search(query,tokenized_corpus )
+    retrieved_tools_bm=[]
+    for i in retrieved_docs_bm:
+        retrieved_tools_bm.append(ast.literal_eval(retrieved_docs_bm[0]))
+    
+    merged_retrived_tool=union_by_toolname(retrieved_tools_cos,retrieved_tools_bm)
+    print(len(merged_retrived_tool))
+    print(type(merged_retrived_tool))
+    return merged_retrived_tool
     
 
 
